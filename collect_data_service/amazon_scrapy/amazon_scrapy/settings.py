@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for project project
+# Scrapy settings for amazon_scrapy project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'project'
+BOT_NAME = 'amazon_scrapy'
 
-SPIDER_MODULES = ['project.spiders']
-NEWSPIDER_MODULE = 'project.spiders'
+SPIDER_MODULES = ['amazon_scrapy.spiders']
+NEWSPIDER_MODULE = 'amazon_scrapy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'project (+http://www.yourdomain.com)'
+#USER_AGENT = 'amazon_scrapy (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'project.middlewares.ProjectSpiderMiddleware': 543,
+#    'amazon_scrapy.middlewares.AmazonScrapySpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'project.middlewares.ProjectDownloaderMiddleware': 543,
+#    'amazon_scrapy.middlewares.AmazonScrapyDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'project.pipelines.ProjectPipeline': 300,
+#    'amazon_scrapy.pipelines.AmazonScrapyPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
