@@ -1,0 +1,7 @@
+[client]
+database = information_retrieval
+user = information_retrieval_user
+password = information_retrieval_user
+host = 128.199.207.105
+port = 3306
+
