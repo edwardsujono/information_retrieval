@@ -7,7 +7,7 @@ class AmazonScrapy(scrapy.Spider):
 
     name = "AmazonScraper"
         
-    start_urls = ["https://www.amazon.com/b/ref=s9_acss_bw_cg_BeautCat_3b1_w?_encoding=UTF8&node=6684060011&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=merchandised-search-4&pf_rd_r=X0EDCWWBMEV5ZA9K24TB&pf_rd_t=101&pf_rd_p=255859a7-f959-5ef3-85fe-df1e2c3daad9&pf_rd_i=6682399011"]
+    start_urls = ["http://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=electronic+devices"]
     
     def parse_item(self,response):
 
@@ -37,23 +37,29 @@ class AmazonScrapy(scrapy.Spider):
             
             link = detail.css("a.s-access-detail-page::attr(href)").extract_first()
             if link is not None:
-                yield scrapy.Request(link,callback=self.parse_item)
+                try:
+                    if "http" in link or "https" in link:
+                        yield scrapy.Request(link, callback=self.parse_item)
+                        print ("test")
+                except Exception:
+                    print ("haha")
 
-
-            yield {
-            #     'product_id' : product_id,
-            #     'product_name'  : detail.css("h2.s-access-title::text").extract_first(),
-            #     'original_price' : detail.css("span.a-size-base-plus::text").extract_first(),
-            #     'current_price' : price,
-                'product_link' : link,
-            #     'rating' : rating,
-            #     'image_link' : detail.css("img::attr(src)").extract_first()
-
-            }
-
+            # yield {
+            # #     'product_id' : product_id,
+            # #     'product_name'  : detail.css("h2.s-access-title::text").extract_first(),
+            # #     'original_price' : detail.css("span.a-size-base-plus::text").extract_first(),
+            # #     'current_price' : price,
+            #     'product_link' : link,
+            # #     'rating' : rating,
+            # #     'image_link' : detail.css("img::attr(src)").extract_first()
+            #
+            # }
+        print ("next_page")
         next_page = response.css('a.pagnNext::attr(href)').extract_first()
         if next_page is not None:
+            print ("next_page")
             next_page = response.urljoin(next_page)
+            next_page = next_page
             yield scrapy.Request(next_page, callback=self.parse)
 
     def stripper(self,list_desc):
