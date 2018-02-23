@@ -96,17 +96,20 @@ class ShopeeSpider(scrapy.Spider):
             item_list = self.get_item_list(item_list_params)
 
             for i in range(self.NUM_OF_ITEMS//len(cat_list)//50):
+            # for i in range(1):
+                # for j in range(4):
+                #     item = item_list[j]
                 for item in item_list:
+                    item = item_list[j]
                     pid = str(item["itemid"]) + str(item["shopid"])
                     self.products[pid] = self.get_item_detail(item["itemid"], item["shopid"])
-                    yield SplashRequest(self.products[pid]["product_link"], self.parse, endpoint="render.html", args={"wait": 5.0}, meta={'pid': pid})
+                    yield SplashRequest(self.products[pid]["product_link"], self.parse, endpoint="render.html", args={"wait": 10.0}, meta={'pid': pid})
 
                 item_list_params["newest"] += item_list_params["limit"]
                 item_list = self.get_item_list(item_list_params)
 
     def parse(self,response):
         pid = response.meta.get('pid')
-        self.log("@@@@@@@@@@@ " + pid)
         columns = ["product_id", "product_name", "original_price", "current_price", "product_description", "product_link", "rating", "image_link"]
         current_price_selector = 'span.shopee-product-info__header__price-before-discount__number::text'
         original_price_selector = 'div.shopee-product-info__header__real-price::text'
@@ -117,17 +120,12 @@ class ShopeeSpider(scrapy.Spider):
         self.products[pid]["current_price"] = current_price
         self.products[pid]["original_price"] = original_price
 
-        tmp = []
+        tmp = {}
 
         for col in columns:
-            tmp.append(self.products[pid][col])
+            if self.products[pid][col] is None:
+                self.products[pid][col] = "-1"
+                
+            tmp[col] = self.products[pid][col]
 
-        try:
-            with open('shopee_products.csv', 'a+') as f:
-                w = csv.writer(f)
-                w.writerow(tmp)
-        except FileNotFoundError:
-            with open('shopee_products.csv', 'w') as f:
-                w = csv.writer(f)
-                w.writerow(columns)
-
+        yield tmp

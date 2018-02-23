@@ -1,0 +1,7 @@
+[client]
+database = <get_this_from_edward>
+user = <get_this_from_edward>
+password = <get_this_from_edward>
+host = <get_this_from_edward>
+port = <get_this_from_edward>
+
