@@ -1,10 +1,11 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 import pysolr
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-
+@csrf_exempt
 def search_product(request):
 
     list_mock_return = {'list_product': []}
