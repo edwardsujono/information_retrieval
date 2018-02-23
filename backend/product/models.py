@@ -1,9 +1,12 @@
 from django.db import models
+from haystack import indexes
 
 # Create your models here.
 
 
 class AmazonProducts(models.Model):
+
+    id = models.IntegerField(primary_key=True)
     product_id = models.CharField(max_length=1000)
     product_name = models.CharField(max_length=1000)
     original_price = models.CharField(max_length=20)
@@ -19,7 +22,7 @@ class AmazonProducts(models.Model):
     def get_serialize(self):
 
         return {
-            "product_id": self.product_id,
+            "id": self.product_id,
             "product_name": self.product_name,
             "original_price": self.original_price,
             "current_price": self.current_price,
@@ -31,6 +34,7 @@ class AmazonProducts(models.Model):
 
 
 class AmazonComments(models.Model):
+
     product_id = models.CharField(max_length=1000)
     comment = models.CharField(max_length=1000)
 
@@ -46,7 +50,8 @@ class AmazonComments(models.Model):
 
 
 class ShopeeProducts(models.Model):
-    product_id = models.CharField(max_length=1000)
+
+    product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=1000)
     original_price = models.CharField(max_length=20)
     current_price = models.CharField(max_length=20)
@@ -61,7 +66,7 @@ class ShopeeProducts(models.Model):
     def get_serialize(self):
 
         return {
-            "product_id": self.product_id,
+            "id": self.product_id,
             "product_name": self.product_name,
             "original_price": self.original_price,
             "current_price": self.current_price,
@@ -73,6 +78,7 @@ class ShopeeProducts(models.Model):
 
 
 class ShopeeComments(models.Model):
+
     product_id = models.CharField(max_length=1000)
     comment = models.CharField(max_length=1000)
 
@@ -88,6 +94,8 @@ class ShopeeComments(models.Model):
 
 
 class LazadaProducts(models.Model):
+
+    id = models.IntegerField(primary_key=True)
     product_id = models.CharField(max_length=1000)
     product_name = models.CharField(max_length=1000)
     original_price = models.CharField(max_length=20)
@@ -102,7 +110,7 @@ class LazadaProducts(models.Model):
 
     def get_serialize(self):
         return {
-            "product_id": self.product_id,
+            "id": self.product_id,
             "product_name": self.product_name,
             "original_price": self.original_price,
             "current_price": self.current_price,
@@ -114,6 +122,7 @@ class LazadaProducts(models.Model):
 
 
 class LazadaComments(models.Model):
+
     product_id = models.CharField(max_length=1000)
     comment = models.CharField(max_length=1000)
 
@@ -126,3 +135,13 @@ class LazadaComments(models.Model):
             "product_id": self.product_id,
             "comment": self.comment
         }
+
+# INDEXING CLASS ORM
+# this is the alternative of manually call the MYSQL and transmit data to the SOLR server.
+
+
+class ShopeeIndex(indexes.SearchIndex, indexes.Indexable):
+
+    text = indexes.CharField(document=True)
+    product_description = indexes.CharField(model_attr='product_description')
+    product_name = indexes.CharField(model_attr='product_name')

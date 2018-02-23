@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
+import pysolr
 
 # Create your views here.
 

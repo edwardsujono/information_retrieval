@@ -18,7 +18,7 @@ CREATE TABLE amazon_comments (
 
 CREATE TABLE shopee_products (
 
-  product_id VARCHAR (1000) NOT NULL PRIMARY KEY,
+  product_id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
   product_name VARCHAR (1000) NOT NULL,
   original_price  VARCHAR (20) NOT NULL,
   current_price VARCHAR (20) NOT NULL,
