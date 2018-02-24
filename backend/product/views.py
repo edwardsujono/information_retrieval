@@ -1,16 +1,21 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
-import pysolr
+from haystack.query import SearchQuerySet
 from django.views.decorators.csrf import csrf_exempt
+from product.models import ShopeeProducts
+import json
 
-# Create your views here.
 
 @csrf_exempt
 def search_product(request):
 
-    list_mock_return = {'list_product': []}
+    body_unicode = request.body.decode('utf-8')
+    post_data = json.loads(body_unicode)
 
-    for i in range(10):
-        list_mock_return.get('list_product').append({"product_name": "test_%s" % i})
+    results = SearchQuerySet().all().filter(text=post_data.get("query"))
+    list_json_return = {'list_product': []}
 
-    return JsonResponse(list_mock_return)
+    for result in results:
+        list_json_return.get('list_product').append({'product_name': result.product_name})
+
+    return JsonResponse(list_json_return)
