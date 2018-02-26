@@ -3,7 +3,6 @@ import scrapy
 ##from scrapy.selector import Selector
 ##from scrapy.http import HtmlResponse
 
-print("tai")
 
 class LazadaCatSpider(scrapy.Spider):
 
@@ -17,7 +16,7 @@ class LazadaCatSpider(scrapy.Spider):
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
                 
-    def parse(self, response):
+    def parse_item(self, response):
         
         ## filename = 'scrapy_test.csv'
         ## with open(filename, 'wb') as f:
@@ -50,7 +49,7 @@ class LazadaCatSpider(scrapy.Spider):
             link = item.css('a::attr(href)').extract_first()
             cat_name = item.css("a > span::text").extract_first()
             for i in range(100):
-                cat_url = "{}?page={}".format(link, i)
+                cat_url = "https:{}?page={}".format(link, i)
                 yield scrapy.Request(url=cat_url, callback=self.parse_item)
                 ##time.sleep(3)
             break
