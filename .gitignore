@@ -109,3 +109,4 @@ venv.bak/
 ./idea
 .DS_STORE
 *.swp
+.vscode/
