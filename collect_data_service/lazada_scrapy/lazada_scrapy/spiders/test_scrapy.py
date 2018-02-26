@@ -22,7 +22,7 @@ class LazadaCatSpider(scrapy.Spider):
         ## with open(filename, 'wb') as f:
         ##     f.write(response.body)
         
-        product_name = response.css("h1.pdp-product-title::text").extract_first().strip()
+        product_name = response.css("h1.pdp-product-title::text").extract_first()
         current_price = response.css("div.pdp-product-price > span::text").extract_first()
         original_price = response.css("div.pdp-product-price > div > span::text").extract_first()
         product_description = response.css("div.detail content > p > span::text").extract()

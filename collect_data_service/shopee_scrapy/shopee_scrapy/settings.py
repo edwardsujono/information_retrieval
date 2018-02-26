@@ -61,7 +61,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
-SPLASH_URL = 'http://0.0.0.0:8050/'
+SPLASH_URL = 'http://128.199.196.15:8055/'
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html

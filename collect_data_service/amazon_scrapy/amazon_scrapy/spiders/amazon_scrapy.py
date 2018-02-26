@@ -46,7 +46,7 @@ class AmazonScrapy(scrapy.Spider):
             # yield {
             # #     'product_id' : product_id,
             # #     'product_name'  : detail.css("h2.s-access-title::text").extract_first(),
-            # #     'original_price' : detail.css("span.a-size-base-plus::text").extract_first(),
+            # #     'original_price     ' : detail.css("span.a-size-base-plus::text").extract_first(),
             # #     'current_price' : price,
             #     'product_link' : link,
             # #     'rating' : rating,
