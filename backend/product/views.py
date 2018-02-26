@@ -9,7 +9,7 @@ import json
 @csrf_exempt
 def search_product(request):
 
-    if request.method is "OPTIONS":
+    if request.method == "OPTIONS":
         return JsonResponse({"success": True})
 
     body_unicode = request.body.decode('utf-8')
