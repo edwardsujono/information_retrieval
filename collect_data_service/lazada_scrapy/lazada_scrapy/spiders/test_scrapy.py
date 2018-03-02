@@ -31,14 +31,14 @@ class LazadaCatSpider(scrapy.Spider):
         product_name = response.css("h1.pdp-product-title::text").extract_first()
         current_price = response.css("div.pdp-product-price > span::text").extract_first()
         original_price = response.css("div.pdp-product-price > div > span::text").extract_first()
-        product_description = response.css("div.detail content > p > span::text").extract()
+        product_description = response.css("div.pdp-product-hightlights > ul > li::text").extract()
         rating = response.css("div.score > span::text").extract_first()
         image_link = response.css("div.gallery-preview-panel__content > img::attr(src)").extract()
         product_link = response.url
 
         if (current_price):
             yield {
-                'product_desc': product_description,
+                'product_description': product_description,
                 'product_name': product_name,
                 'current_price': current_price,
                 'original_price': original_price,
