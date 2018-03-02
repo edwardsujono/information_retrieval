@@ -53,43 +53,59 @@ def insert_many(config_file, table, payload):
     cursor.close()
     db_conn.commit()
 
-def insert_to_db(table_name):
-    payload = {
-            "columns": [],
+def insert_to_db(site_name):
+    sites = ["amazon", "shopee", "lazada"]
+
+    if not(site_name in sites):
+        print("Invalid site")
+        return
+
+    product_table_name = site_name + "_products"
+    comments_table_name = site_name + "_comments"
+
+    product_columns = ["product_name", "original_price", "current_price", "product_description", "product_link", "rating", "image_link"]
+    comment_columns = ["product_id", "comment"]
+
+    product_payload = {
+            "columns": product_columns,
             "values": []
     }
+
+    comments_payload = {
+            "columns": comment_columns,
+            "values": []
+    }
+
     LIMIT = 100
 
     try: 
-        with open('data/{}.json'.format(table_name)) as f:
+        with open('data/{}.json'.format(product_table_name)) as f:
             data = json.load(f)
-            payload["columns"] = list(data[0].keys())
             counter = 0
-            pid_counter = 0
 
             for item in data:
-                if counter >= LIMIT:
-                    insert_many('my_sql.cnf', table_name, payload)
-                    payload["values"] = []
+                if counter >= LIMIT or data.index(item) == len(data)-1:
+                    insert_many('my_sql.cnf', product_table_name, product_payload)
+                    insert_many('my_sql.cnf', comments_table_name, comments_payload)
+                    product_payload["values"] = []
+                    comments_payload["values"] = []
                     counter = 0
                 else:
                     if (table_name == 'amazon_products'):
-                        product_description = item["product_description"]
-                        product_description = " ".join(product_description)
-                        item["product_description"] = product_description
-                        if item["original_price"] is None:
-                            item["original_price"] = "-1"
-                    elif (table_name == 'shopee_products'):
-                        item["product_id"] = pid_counter
-                        pid_counter += 1
+                        item["product_description"] = "\n".join(item["product_description"])
+                        for key in item:
+                            if item[key] is None:
+                                item[key] = "-1"
 
+                    pid = item["product_link"]
+                    comments = "\n".join(item.pop("comments"))
 
-                    payload["values"].append(tuple(item.values()))
+                    comments_payload["values"].append(tuple([pid, comments]))
+                    product_payload["values"].append(tuple(item.values()))
                     counter += 1
-            insert_many('my_sql.cnf', table_name, payload)
     except FileNotFoundError:
         return
 
-# insert_to_db('shopee_products')
-# insert_to_db('lazada_products')
-# insert_to_db('amazon_products')
+# insert_to_db('shopee')
+# insert_to_db('lazada')
+# insert_to_db('amazon')
