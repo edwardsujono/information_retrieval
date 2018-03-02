@@ -47,7 +47,7 @@ def insert_many(config_file, table, payload):
 
     columns = ', '.join(payload['columns'])
     values = ', '.join(['%s' for i in range(len(payload['columns']))])
-    query = """INSERT INTO {} ({}) VALUES ({});""".format(table, columns, values)
+    query = """INSERT IGNORE INTO {} ({}) VALUES ({});""".format(table, columns, values)
 
     cursor.executemany(query, payload['values'])
     cursor.close()
@@ -65,6 +65,7 @@ def insert_to_db(table_name):
             data = json.load(f)
             payload["columns"] = list(data[0].keys())
             counter = 0
+            pid_counter = 0
 
             for item in data:
                 if counter >= LIMIT:
@@ -72,12 +73,23 @@ def insert_to_db(table_name):
                     payload["values"] = []
                     counter = 0
                 else:
+                    if (table_name == 'amazon_products'):
+                        product_description = item["product_description"]
+                        product_description = " ".join(product_description)
+                        item["product_description"] = product_description
+                        if item["original_price"] is None:
+                            item["original_price"] = "-1"
+                    elif (table_name == 'shopee_products'):
+                        item["product_id"] = pid_counter
+                        pid_counter += 1
+
+
                     payload["values"].append(tuple(item.values()))
                     counter += 1
             insert_many('my_sql.cnf', table_name, payload)
     except FileNotFoundError:
         return
 
-insert_to_db('shopee_products')
+# insert_to_db('shopee_products')
 # insert_to_db('lazada_products')
 # insert_to_db('amazon_products')

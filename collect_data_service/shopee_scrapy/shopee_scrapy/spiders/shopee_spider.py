@@ -69,7 +69,7 @@ class ShopeeSpider(scrapy.Spider):
         item_detail = json.loads(self.shopee_api_request("item_detail", item_detail_params))
 
         result = {}
-        result["product_id"] = item_detail["itemid"]
+        result["product_id"] = str(item_detail["itemid"]) + str(item_detail["shopid"])
         result["product_name"] = item_detail["name"]
         result["product_description"] = item_detail["description"]
         result["shop_id"] = item_detail["shopid"]
@@ -100,7 +100,6 @@ class ShopeeSpider(scrapy.Spider):
                 # for j in range(4):
                 #     item = item_list[j]
                 for item in item_list:
-                    item = item_list[j]
                     pid = str(item["itemid"]) + str(item["shopid"])
                     self.products[pid] = self.get_item_detail(item["itemid"], item["shopid"])
                     yield SplashRequest(self.products[pid]["product_link"], self.parse, endpoint="render.html", args={"wait": 10.0}, meta={'pid': pid})
