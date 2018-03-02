@@ -53,28 +53,30 @@ class LazadaCatSpider(scrapy.Spider):
         for item in response.css("li.lzd-site-menu-sub-item"):
             link = item.css('a::attr(href)').extract_first()
             cat_name = item.css("a > span::text").extract_first()
-            for i in range(100):
-                cat_url = "https:{}?page={}".format(link, i)
-                yield SplashRequest(url=cat_url, callback=self.parse_itempage)
+            for i in range(1):
+                try:
+                    cat_url = "https:{}?page={}".format(link, i)
+                    yield SplashRequest(url=cat_url, callback=self.parse_itempage)
+                except Exception:
+                    print ("error parse first")
 
     def parse_itempage(self, response):
 
-        for detail in response.css("div.c1_t2i"):
+        ### link to item detail
+        links = response.css("div.cRjKsc > a::attr(href)").extract()
 
-            ### link to item detail
-            link = detail.css("div.cRjKsc > a::attr(href)").extract()
+        if len(links) > 0:
+            try:
+                for link in links:
+                    update_link = "http:" + link
+                    yield SplashRequest(url=update_link, callback=self.parse_item)
+                    return
+            except Exception:
+                print("error parse second")
 
-            if link is not None:
-                try:
-                    if "http" in link or "https" in link:
-                        yield scrapy.Request(link, callback=self.parse_item)
-                        print("success")
-                except Exception:
-                    print("error")
-
-                    # next_page = response.css('a.pagnNext::attr(href)').extract_first()
-                    # if next_page is not None:
-                    #     print ("next_page")
-                    #     next_page = response.urljoin(next_page)
-                    #     next_page = next_page
-                    #     yield SplashRequest(next_page, callback=self.parse)
+                # next_page = response.css('a.pagnNext::attr(href)').extract_first()
+                # if next_page is not None:
+                #     print ("next_page")
+                #     next_page = response.urljoin(next_page)
+                #     next_page = next_page
+                #     yield SplashRequest(next_page, callback=self.parse)
