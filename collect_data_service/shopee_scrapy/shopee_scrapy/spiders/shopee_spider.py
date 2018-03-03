@@ -13,7 +13,8 @@ class ShopeeSpider(scrapy.Spider):
     api_endpoints = {
             "category_list": "api/v1/category_list",
             "item_list": "api/v1/search_items",
-            "item_detail": "api/v1/item_detail"
+            "item_detail": "api/v1/item_detail",
+            "comment_list": "api/v1/comment_list"
     }
 
     products = {}
@@ -69,15 +70,33 @@ class ShopeeSpider(scrapy.Spider):
         item_detail = json.loads(self.shopee_api_request("item_detail", item_detail_params))
 
         result = {}
-        result["product_id"] = item_detail["itemid"]
+        result["product_id"] = str(item_detail["itemid"]) + str(item_detail["shopid"])
         result["product_name"] = item_detail["name"]
         result["product_description"] = item_detail["description"]
         result["shop_id"] = item_detail["shopid"]
         result["product_link"] = self.get_item_link(item_detail["name"], item_detail["shopid"], item_detail["itemid"])
         result["rating"] = round(item_detail["rating_star"], 2)
         result["image_link"] = self.get_image_link(item_detail["image"])
+        result["comments"] = self.get_comment_list(item_id, shop_id)
 
         return result
+
+    def get_comment_list(self, item_id, shop_id):
+        comment_list_params = {
+                "item_id": item_id,
+                "shop_id": shop_id,
+                "limit": 10,
+                "offset": 0,
+                "flag": 1
+        }
+
+        comments = []
+        comment_list = json.loads(self.shopee_api_request("comment_list", comment_list_params))
+
+        for item in comment_list["comments"]:
+            comments.append(item["comment"])
+
+        return comments
 
     def start_requests(self):
         cat_list = self.get_category_list()
@@ -94,13 +113,12 @@ class ShopeeSpider(scrapy.Spider):
             }
 
             item_list = self.get_item_list(item_list_params)
-
+#
             for i in range(self.NUM_OF_ITEMS//len(cat_list)//50):
             # for i in range(1):
-                # for j in range(4):
-                #     item = item_list[j]
+            #     for j in range(4):
+                    # item = item_list[j]
                 for item in item_list:
-                    item = item_list[j]
                     pid = str(item["itemid"]) + str(item["shopid"])
                     self.products[pid] = self.get_item_detail(item["itemid"], item["shopid"])
                     yield SplashRequest(self.products[pid]["product_link"], self.parse, endpoint="render.html", args={"wait": 10.0}, meta={'pid': pid})
@@ -110,7 +128,7 @@ class ShopeeSpider(scrapy.Spider):
 
     def parse(self,response):
         pid = response.meta.get('pid')
-        columns = ["product_id", "product_name", "original_price", "current_price", "product_description", "product_link", "rating", "image_link"]
+        columns = ["product_name", "original_price", "current_price", "product_description", "product_link", "rating", "image_link", "comments"]
         current_price_selector = 'span.shopee-product-info__header__price-before-discount__number::text'
         original_price_selector = 'div.shopee-product-info__header__real-price::text'
         

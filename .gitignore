@@ -110,3 +110,5 @@ venv.bak/
 .DS_STORE
 *.swp
 .vscode/
+data/
+*.cnf
