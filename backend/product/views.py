@@ -21,7 +21,7 @@ def search_product(request):
     for result in results:
         list_json_return.get('list_product').append({'product_name': result.product_name})
 
-    return JsonResponse(list_json_return)
+    return JsonResponse(list_json_return.get('list_product'))
 
 
 @csrf_exempt
