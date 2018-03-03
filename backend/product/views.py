@@ -21,7 +21,7 @@ def search_product(request):
     for result in results:
         list_json_return.get('list_product').append({'product_name': result.product_name})
 
-    return JsonResponse(list_json_return.get('list_product'))
+    return JsonResponse(list_json_return)
 
 
 @csrf_exempt
@@ -39,9 +39,9 @@ def get_detail_item(request):
 
     if product_type == "shopee":
         result = ShopeeProducts.objects.get(product_id=int(product_id)).get_serialize()
-    elif product_type == "amazon":
+    elif product_type is "amazon":
         result = AmazonProducts.objects.get(product_id=int(product_id)).get_serialize()
-    elif product_type == "lazada":
+    elif product_type is "lazada":
         result = LazadaProducts.objects.get(product_id=int(product_id)).get_serialize()
 
     return JsonResponse({'success': True, 'product': result})
@@ -81,4 +81,5 @@ def get_list_item(request):
 
         cnt += 1
 
-    return JsonResponse(list_json_return)
+    return JsonResponse({"list_product": list_json_return, "total": len(results)})
+
