@@ -81,5 +81,4 @@ def get_list_item(request):
 
         cnt += 1
 
-    return JsonResponse({"list_product": list_json_return, "total": len(results)})
-
+    return JsonResponse(list_json_return)
