@@ -28,6 +28,15 @@ class AmazonScrapy(scrapy.Spider):
         image_link = response.css("div#imgTagWrapperId img::attr(data-old-hires)").extract_first()
         self.stripper(product_description) ### stripping \n \t etc
         product_link = response.url
+        comments = []
+        
+        for detail in response.css("div.review-data"):
+            
+            reviews =  detail.css("div.a-expander-content::text").extract_first()
+            if(reviews):
+                comments.append(reviews)
+        
+        
 
         ###if price or image link doesnt exist, throw away
         if(price_whole and image_link):
@@ -38,7 +47,8 @@ class AmazonScrapy(scrapy.Spider):
                 'original_price' : original_price,
                 'rating' : rating,
                 'image_link' : image_link,
-                'product_link' : product_link
+                'product_link' : product_link,
+                'comments' : comments,
 
             }
 
