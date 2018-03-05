@@ -10,7 +10,9 @@ import json
 def search_product(request):
 
     if request.method == "OPTIONS":
-        return JsonResponse({"success": True})
+        response = JsonResponse({"success": True})
+        response["Access-Control-Allow-Origin"] = '*'
+        return response
 
     body_unicode = request.body.decode('utf-8')
     post_data = json.loads(body_unicode)
