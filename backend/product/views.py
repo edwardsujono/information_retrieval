@@ -12,7 +12,7 @@ def search_product(request):
     if request.method == "OPTIONS":
         response = JsonResponse({"success": True})
         response["Access-Control-Allow-Origin"] = '*'
-        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token'
+        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
         response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
         return response
 
@@ -27,7 +27,7 @@ def search_product(request):
 
     response = JsonResponse(list_json_return)
     response["Access-Control-Allow-Origin"] = '*'
-    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token'
+    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
     response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
     return response
 
