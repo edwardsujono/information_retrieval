@@ -36,7 +36,11 @@ def search_product(request):
 def get_detail_item(request):
 
     if request.method == "OPTIONS":
-        return JsonResponse({"success": True})
+        response = JsonResponse({"success": True})
+        response["Access-Control-Allow-Origin"] = '*'
+        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
+        response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+        return response
 
     get_data = request.GET
 
@@ -52,14 +56,23 @@ def get_detail_item(request):
     elif product_type is "lazada":
         result = LazadaProducts.objects.get(product_id=int(product_id)).get_serialize()
 
-    return JsonResponse({'success': True, 'product': result})
+    response = JsonResponse({'success': True, 'product': result})
+    response["Access-Control-Allow-Origin"] = '*'
+    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
+    response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+
+    return response
 
 
 @csrf_exempt
 def get_list_item(request):
 
     if request.method == "OPTIONS":
-        return JsonResponse({"success": True})
+        response = JsonResponse({"success": True})
+        response["Access-Control-Allow-Origin"] = '*'
+        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
+        response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+        return response
 
     get_data = request.GET
 
@@ -89,5 +102,8 @@ def get_list_item(request):
 
         cnt += 1
 
-    return JsonResponse({"list_product": list_json_return, "total": len(results)})
-
+    response = JsonResponse({"list_product": list_json_return, "total": len(results)})
+    response["Access-Control-Allow-Origin"] = '*'
+    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
+    response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+    return response
