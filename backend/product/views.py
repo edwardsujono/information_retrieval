@@ -21,7 +21,10 @@ def search_product(request):
     for result in results:
         list_json_return.get('list_product').append({'product_name': result.product_name})
 
-    return JsonResponse(list_json_return)
+    response = JsonResponse(list_json_return)
+    response["Access-Control-Allow-Origin"] = '*'
+
+    return response
 
 
 @csrf_exempt
