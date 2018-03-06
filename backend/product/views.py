@@ -1,20 +1,16 @@
-from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 from django.views.decorators.csrf import csrf_exempt
 from product.models import ShopeeProducts, AmazonProducts, LazadaProducts
 import json
+from common.utils import append_header_with_cors
 
 
 @csrf_exempt
 def search_product(request):
 
     if request.method == "OPTIONS":
-        response = JsonResponse({"success": True})
-        response["Access-Control-Allow-Origin"] = '*'
-        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
-        response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-        return response
+        return append_header_with_cors(JsonResponse({"success": True}))
 
     body_unicode = request.body.decode('utf-8')
     post_data = json.loads(body_unicode)
@@ -25,22 +21,14 @@ def search_product(request):
     for result in results:
         list_json_return.get('list_product').append({'product_name': result.product_name})
 
-    response = JsonResponse(list_json_return)
-    response["Access-Control-Allow-Origin"] = '*'
-    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
-    response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-    return response
+    return append_header_with_cors(JsonResponse(list_json_return))
 
 
 @csrf_exempt
 def get_detail_item(request):
 
     if request.method == "OPTIONS":
-        response = JsonResponse({"success": True})
-        response["Access-Control-Allow-Origin"] = '*'
-        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
-        response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-        return response
+        return append_header_with_cors(JsonResponse({"success": True}))
 
     get_data = request.GET
 
@@ -56,23 +44,14 @@ def get_detail_item(request):
     elif product_type is "lazada":
         result = LazadaProducts.objects.get(product_id=int(product_id)).get_serialize()
 
-    response = JsonResponse({'success': True, 'product': result})
-    response["Access-Control-Allow-Origin"] = '*'
-    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
-    response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-
-    return response
+    return append_header_with_cors(JsonResponse({'success': True, 'product': result}))
 
 
 @csrf_exempt
 def get_list_item(request):
 
     if request.method == "OPTIONS":
-        response = JsonResponse({"success": True})
-        response["Access-Control-Allow-Origin"] = '*'
-        response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
-        response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-        return response
+        return append_header_with_cors(JsonResponse({"success": True}))
 
     get_data = request.GET
 
@@ -102,8 +81,5 @@ def get_list_item(request):
 
         cnt += 1
 
-    response = JsonResponse({"list_product": list_json_return, "total": len(results)})
-    response["Access-Control-Allow-Origin"] = '*'
-    response["Access-Control-Allow-Headers"] = 'Origin, Content-Type, X-Auth-Token, Header'
-    response["Access-Control-Allow-Methods"] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-    return response
+    return append_header_with_cors(
+        JsonResponse({"list_product": list_json_return, "total": len(results)}))
