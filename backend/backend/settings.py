@@ -25,7 +25,7 @@ SECRET_KEY = 'r%904cvuf0gx22!ez=bu9758hy_$kjdj)*(0&fa55jk-h2tdj)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['128.199.207.105', 'localhost']
+ALLOWED_HOSTS = ['128.199.207.105', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -40,13 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'cron_service',
     'product',
-    'haystack',
-    'corsheaders'
+    'haystack'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,7 +54,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
