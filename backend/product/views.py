@@ -3,7 +3,7 @@ from haystack.query import SearchQuerySet
 from django.views.decorators.csrf import csrf_exempt
 from product.models import ShopeeProducts, AmazonProducts, LazadaProducts
 import json
-from common.utils import append_header_with_cors
+from common.utils import append_header_with_cors, verbose_name_to_shop_name
 
 
 @csrf_exempt
@@ -75,7 +75,8 @@ def get_list_item(request):
                     'product_description': result.product_description,
                     'original_price': result.original_price,
                     'current_price': result.current_price,
-                    'image_link': result.image_link
+                    'image_link': result.image_link,
+                    'shop': verbose_name_to_shop_name(result.verbose_name)
                 }
             )
 
