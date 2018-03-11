@@ -18,8 +18,15 @@ def search_product(request):
     results = SearchQuerySet().all().filter(text=post_data.get("query"))
     list_json_return = {'list_product': []}
 
+    limit_query = 5
+    cnt = 0
+
     for result in results:
         list_json_return.get('list_product').append({'product_name': result.product_name})
+        cnt += 1
+
+        if cnt == limit_query:
+            break
 
     return append_header_with_cors(JsonResponse(list_json_return))
 
