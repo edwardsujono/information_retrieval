@@ -35,16 +35,18 @@ class LazadaCatSpider(scrapy.Spider):
         rating = response.css("div.score > span::text").extract_first()
         image_link = response.css("div.gallery-preview-panel__content > img::attr(src)").extract()
         product_link = response.url
+        product_comment = response.css("div.mod-reviews > div.item > div.content::text").extract()
 
         if (current_price):
             yield {
+                'product_id': product_link,
                 'product_description': product_description,
                 'product_name': product_name,
                 'current_price': current_price,
                 'original_price': original_price,
                 'rating': rating,
                 'image_link': image_link,
-                'product_link': product_link
+                'çomments': product_comment
             }
 
             ##self.log('Saved file %s' % filename)
@@ -80,3 +82,4 @@ class LazadaCatSpider(scrapy.Spider):
                 #     next_page = response.urljoin(next_page)
                 #     next_page = next_page
                 #     yield SplashRequest(next_page, callback=self.parse)
+
