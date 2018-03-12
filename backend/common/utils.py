@@ -10,8 +10,8 @@ def append_header_with_cors(response):
 def verbose_name_to_shop_name(verbose_name):
 
     if "Amazon" in verbose_name:
-        return "Amazon"
+        return "amazon"
     elif "Shopee" in verbose_name:
-        return "Shopee"
+        return "shopee"
     else:
-        return "Lazada"
+        return "lazada"
