@@ -6,8 +6,7 @@ from haystack import indexes
 
 class AmazonProducts(models.Model):
 
-    id = models.IntegerField(primary_key=True)
-    product_id = models.CharField(max_length=1000)
+    product_id = models.AutoField(primary_key=True)
     product_name = models.CharField(max_length=1000)
     original_price = models.CharField(max_length=20)
     current_price = models.CharField(max_length=20)
@@ -95,8 +94,7 @@ class ShopeeComments(models.Model):
 
 class LazadaProducts(models.Model):
 
-    id = models.IntegerField(primary_key=True)
-    product_id = models.CharField(max_length=1000)
+    product_id = models.IntegerField(primary_key=True)
     product_name = models.CharField(max_length=1000)
     original_price = models.CharField(max_length=20)
     current_price = models.CharField(max_length=20)
