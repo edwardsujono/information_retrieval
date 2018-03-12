@@ -90,7 +90,7 @@ DATABASES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://user_name:password@128.199.207.105:8983/solr/shopee_collection'
+        'URL': 'http://user_name:password@128.199.207.105:8983/solr/item_collection/'
         # ...or for multicore...
         # 'URL': 'http://127.0.0.1:8983/solr/mysite',
     },

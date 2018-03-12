@@ -134,12 +134,26 @@ class LazadaComments(models.Model):
             "comment": self.comment
         }
 
-# INDEXING CLASS ORM
-# this is the alternative of manually call the MYSQL and transmit data to the SOLR server.
+
+# Product Name to store all the name of the product that has been pre-processed
+
+class ProductName(models.Model):
+
+    product_id = models.AutoField(primary_key=True)
+    product_link = models.CharField(max_length=1000)
+    product_name = models.CharField(max_length=1000)
+
+    class Meta:
+        db_table = 'product_names'
 
 
-class ShopeeIndex(indexes.SearchIndex, indexes.Indexable):
+# Product token with the number of token existed
 
-    text = indexes.CharField(document=True)
-    product_description = indexes.CharField(model_attr='product_description')
-    product_name = indexes.CharField(model_attr='product_name')
+class ProductTokenCount(models.Model):
+
+    token_id = models.AutoField(primary_key=True)
+    token_name = models.CharField(max_length=100)
+    token_count = models.IntegerField()
+
+    class Meta:
+        db_table = 'product_token_counts'

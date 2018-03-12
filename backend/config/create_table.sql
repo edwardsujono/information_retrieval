@@ -54,3 +54,23 @@ CREATE TABLE lazada_comments (
   product_id VARCHAR (1000) NOT NULL,
   comment VARCHAR(1000) NOT NULL
 );
+
+
+
+CREATE TABLE lazada_comments (
+  product_id VARCHAR (1000) NOT NULL,
+  comment VARCHAR(1000) NOT NULL
+);
+
+
+CREATE TABLE product_names (
+  product_id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  product_link VARCHAR (1000) NOT NULL,
+  product_name VARCHAR(1000) NOT NULL
+);
+
+CREATE TABLE product_token_counts (
+  token_id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  token_name VARCHAR (1000) NOT NULL,
+  token_count int(11)
+);

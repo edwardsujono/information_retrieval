@@ -1,33 +1,81 @@
 from django.core.management.base import BaseCommand
-from product.models import ShopeeProducts
-import pysolr
+from product.models import ShopeeProducts, LazadaProducts,\
+    AmazonProducts, ProductName, ProductTokenCount
+from nltk.corpus import stopwords
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        self.solr = pysolr.Solr('http://user_name:password@128.199.207.105:8983/solr/shopee_collection', timeout=10)
-
-        self.start_indexing_amazon_products()
-        self.start_indexing_lazada_products()
-        self.start_indexing_shopee_products()
+        # this will build the indexer for the auto complete
+        self.start_save_to_product_name_db()
         return
 
-    def start_indexing_shopee_products(self):
+    def start_save_to_product_name_db(self):
 
-        all_products = ShopeeProducts.objects.all()
-        list_product = []
+        # collect all the product name
+        # all_shopee = ShopeeProducts.objects.all()
+        # all_lazada = LazadaProducts.objects.all()
+        # all_amazon = AmazonProducts.objects.all()
+        #
+        # for shopee in all_shopee:
+        #
+        #     product_name = ProductName(
+        #         product_link=shopee.product_link,
+        #         product_name=shopee.product_name
+        #     )
+        #
+        #     product_name.save()
+        #
+        # for lazada in all_lazada:
+        #
+        #     product_name = ProductName(
+        #         product_link=lazada.product_link,
+        #         product_name=lazada.product_name
+        #     )
+        #
+        #     product_name.save()
+        #
+        # for amazon in all_amazon:
+        #
+        #     product_name = ProductName(
+        #         product_link=amazon.product_link,
+        #         product_name=amazon.product_name
+        #     )
+        #
+        #     product_name.save()
+
+        all_products = ProductName.objects.all()
+        dictionary_save = {}
 
         for product in all_products:
-            list_product.append(product.get_serialize())
 
-        self.solr.add(list_product)
+            list_product_token = product.product_name.split(" ")
 
-        return
+            for product_token in list_product_token:
 
-    def start_indexing_lazada_products(self):
-        return
+                if dictionary_save.get(product_token) is None:
+                    dictionary_save[product_token] = 0
 
-    def start_indexing_amazon_products(self):
-        return
+                dictionary_save[product_token] += 1
+
+        for key, value in dictionary_save.items():
+
+            product_token_count = ProductTokenCount(
+                token_name=key,
+                token_count=value
+            )
+            product_token_count.save()
+
+    def removing_stopword(self, product_name):
+
+        word_list = product_name.split(" ")
+        filtered_words = [word for word in word_list if word not in stopwords.words('english')]
+
+        return_product_name = ""
+
+        for word in filtered_words:
+            return_product_name += word + " "
+
+        return return_product_name[:len(return_product_name)-1]

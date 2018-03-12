@@ -2,8 +2,8 @@ from django.http import JsonResponse
 from haystack.query import SearchQuerySet
 from django.views.decorators.csrf import csrf_exempt
 from product.models import ShopeeProducts, AmazonProducts, LazadaProducts
-import json
 from common.utils import append_header_with_cors, verbose_name_to_shop_name
+from . import search_manager
 
 
 @csrf_exempt
@@ -12,23 +12,7 @@ def search_product(request):
     if request.method == "OPTIONS":
         return append_header_with_cors(JsonResponse({"success": True}))
 
-    body_unicode = request.body.decode('utf-8')
-    post_data = json.loads(body_unicode)
-
-    results = SearchQuerySet().all().filter(text=post_data.get("query"))
-    list_json_return = {'list_product': []}
-
-    limit_query = 5
-    cnt = 0
-
-    for result in results:
-        list_json_return.get('list_product').append({'product_name': result.product_name})
-        cnt += 1
-
-        if cnt == limit_query:
-            break
-
-    return append_header_with_cors(JsonResponse(list_json_return))
+    return append_header_with_cors(JsonResponse(search_manager.get_suggestion_word(request)))
 
 
 @csrf_exempt
