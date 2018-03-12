@@ -39,14 +39,14 @@ class LazadaCatSpider(scrapy.Spider):
 
         if (current_price):
             yield {
-                'product_id': product_link,
+                'product_link': product_link,
                 'product_description': product_description,
                 'product_name': product_name,
                 'current_price': current_price,
                 'original_price': original_price,
                 'rating': rating,
                 'image_link': image_link,
-                'çomments': product_comment
+                'comments': product_comment
             }
 
             ##self.log('Saved file %s' % filename)
@@ -55,9 +55,9 @@ class LazadaCatSpider(scrapy.Spider):
         for item in response.css("li.lzd-site-menu-sub-item"):
             link = item.css('a::attr(href)').extract_first()
             cat_name = item.css("a > span::text").extract_first()
-            for i in range(1):
+            for i in range(5):
                 try:
-                    cat_url = "https:{}?page={}".format(link, i)
+                    cat_url = "https:{}?page={}".format(link, i+1)
                     yield SplashRequest(url=cat_url, callback=self.parse_itempage)
                 except Exception:
                     print ("error parse first")
