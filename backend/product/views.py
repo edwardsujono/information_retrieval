@@ -46,9 +46,9 @@ def get_detail_item(request):
 
     if product_type == "shopee":
         result = ShopeeProducts.objects.get(product_id=int(product_id)).get_serialize()
-    elif product_type is "amazon":
+    elif product_type == "amazon":
         result = AmazonProducts.objects.get(product_id=int(product_id)).get_serialize()
-    elif product_type is "lazada":
+    elif product_type == "lazada":
         result = LazadaProducts.objects.get(product_id=int(product_id)).get_serialize()
 
     return append_header_with_cors(JsonResponse({'success': True, 'product': result}))
