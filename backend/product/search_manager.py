@@ -10,11 +10,15 @@ def get_suggestion_word(request):
     post_data = json.loads(body_unicode)
 
     query_data = post_data.get("query")
+    list_json_return = {'list_product': []}
+
+    if len(query_data.split(" ")) == 0:
+        return list_json_return
+
     check_start_query_word = query_data.split(" ")[0]
     treshold_word_count = len(query_data.split(" "))
 
     results = SearchQuerySet().all().filter(text=query_data)
-    list_json_return = {'list_product': []}
 
     dict_filter_token = {}
 
