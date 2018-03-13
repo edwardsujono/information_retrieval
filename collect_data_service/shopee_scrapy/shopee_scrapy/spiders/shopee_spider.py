@@ -6,7 +6,7 @@ import csv
 from scrapy_splash import SplashRequest
 
 class ShopeeSpider(scrapy.Spider):
-    NUM_OF_ITEMS = 30000
+    NUM_OF_ITEMS = 20000
     name = "shopee"
 
     domain_url = "https://shopee.sg/"
@@ -121,7 +121,7 @@ class ShopeeSpider(scrapy.Spider):
                 for item in item_list:
                     pid = str(item["itemid"]) + str(item["shopid"])
                     self.products[pid] = self.get_item_detail(item["itemid"], item["shopid"])
-                    yield SplashRequest(self.products[pid]["product_link"], self.parse, endpoint="render.html", args={"wait": 10.0}, meta={'pid': pid})
+                    yield SplashRequest(self.products[pid]["product_link"], self.parse, endpoint="render.html", args={"wait": 6.0}, meta={'pid': pid})
 
                 item_list_params["newest"] += item_list_params["limit"]
                 item_list = self.get_item_list(item_list_params)

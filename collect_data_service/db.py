@@ -91,7 +91,7 @@ def insert_to_db(site_name):
                     comments_payload["values"] = []
                     counter = 0
                 else:
-                    if (table_name == 'amazon_products'):
+                    if (product_table_name == 'amazon_products'):
                         item["product_description"] = "\n".join(item["product_description"])
                         for key in item:
                             if item[key] is None:
