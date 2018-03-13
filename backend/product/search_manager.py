@@ -22,7 +22,7 @@ def get_suggestion_word(request):
 
     dict_filter_token = {}
 
-    limit = 100
+    limit = 20
     counter = 0
 
     # calculating the token number
