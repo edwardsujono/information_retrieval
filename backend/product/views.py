@@ -50,7 +50,7 @@ def get_list_item(request):
     offset = int(get_data.get("offset"))
     limit = int(get_data.get("limit"))
 
-    results = SearchQuerySet().all().filter(text=product_name)
+    results = SearchQuerySet().all().filter(product_name=product_name)
     list_json_return = {'list_product': []}
 
     cnt = 0
