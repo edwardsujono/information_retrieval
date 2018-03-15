@@ -22,10 +22,11 @@ def get_suggestion_word(request):
 
     dict_filter_token = {}
 
-    limit = 20
-    counter = 0
+    limit = 100
 
     # calculating the token number
+    if len(results) > limit:
+        results = results[:limit]
 
     for result in results:
 
@@ -38,15 +39,8 @@ def get_suggestion_word(request):
 
             dict_filter_token[word.lower()] += 1
 
-        counter += 1
-
-        if counter == limit:
-            break
-
-    # just allow the token counter to be greater than 1
 
     set_allowed_token = set()
-    counter = 0
 
     for key, value in dict_filter_token.items():
 
@@ -74,17 +68,13 @@ def get_suggestion_word(request):
         # stripping space
         word_filter = remove_duplicate_word_and_not_english_word(word_filter.strip(" "))
 
+        # just allowed the return string length to be more than the query
         if len(word_filter.split(" ")) > treshold_word_count and word_filter not in set_word:
 
             set_word.add(word_filter)
             list_json_return.get('list_product').append(
                 {'product_name': word_filter}
             )
-
-            counter += 1
-
-            if counter == limit:
-                return list_json_return
 
     return list_json_return
 
