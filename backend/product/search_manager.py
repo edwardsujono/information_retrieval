@@ -18,7 +18,7 @@ def get_suggestion_word(request):
     check_start_query_word = query_data.split(" ")[0]
     treshold_word_count = len(query_data.split(" "))
 
-    results = SearchQuerySet().all().filter(text=query_data)
+    results = SearchQuerySet().all().filter(product_name=query_data)
 
     dict_filter_token = {}
 
