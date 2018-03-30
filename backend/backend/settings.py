@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import pysolr
+import pickle
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,3 +135,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+SOLR = pysolr.Solr('http://user_name:password@128.199.207.105:8983/solr/item_collection', timeout=10)
+
+with open('rocchio_classifier.pkl', 'rb') as f:
+    ROCCHIO_CLASSIFER = pickle.load(f, encoding='latin1')
+
+
+with open('vectorizer_rocchio.pkl', 'rb') as f:
+    VECTORIZER_ROCCHIO = pickle.load(f, encoding='latin1')
+
+
+with open('map_label_with_y.pkl', 'rb') as f:
+    MAP_LABEL_WITH_Y = pickle.load(f, encoding='latin1')

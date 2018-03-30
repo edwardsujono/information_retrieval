@@ -1,11 +1,20 @@
 import json
 import re
 from haystack.query import SearchQuerySet
+import numpy as np
 from nltk.corpus import stopwords
+from django.conf import settings
+from product.models import AmazonProducts, LazadaProducts,ShopeeProducts
+
+
+rocchio_classifier = settings.ROCCHIO_CLASSIFER
+# the result of the classifier is the primary key
+vectorizer = settings.VECTORIZER_ROCCHIO
+# the map between the product id and the result
+map_product_id_label = settings.MAP_LABEL_WITH_Y
 
 
 def get_suggestion_word(request):
-
     body_unicode = request.body.decode('utf-8')
     post_data = json.loads(body_unicode)
 
@@ -39,7 +48,6 @@ def get_suggestion_word(request):
 
             dict_filter_token[word.lower()] += 1
 
-
     set_allowed_token = set()
 
     for key, value in dict_filter_token.items():
@@ -70,7 +78,6 @@ def get_suggestion_word(request):
 
         # just allowed the return string length to be more than the query
         if len(word_filter.split(" ")) > treshold_word_count and word_filter not in set_word:
-
             set_word.add(word_filter)
             list_json_return.get('list_product').append(
                 {'product_name': word_filter}
@@ -80,7 +87,6 @@ def get_suggestion_word(request):
 
 
 def remove_duplicate_word_and_not_english_word(word):
-
     word_return = ""
 
     word = re.sub(r'([^\s\w]|_)+', '', word)
@@ -96,3 +102,77 @@ def remove_duplicate_word_and_not_english_word(word):
     word_return = word_return.strip(" ")
 
     return word_return
+
+
+def get_recommended_items(request):
+
+    body_unicode = request.body.decode('utf-8')
+    post_data = json.loads(body_unicode)
+
+    list_product_name = post_data.get("list_product_name")
+    initial_query = post_data.get("initial_query")
+
+    #Apply the rocchio algorithm
+    #final_vector = vector_query + centroid(related_document)
+    #Apply the KNN on the final vector
+
+    initial_vector = vectorizer.transform([initial_query]).toarray()
+
+    list_direction_vector = []
+
+    for product_name in list_product_name:
+        list_direction_vector.append(vectorizer.transform([product_name]).toarray())
+
+    direction_vector = initial_vector + np.average(list_direction_vector, axis=0)
+
+    # it uses the 5-NN so just 5 results is resulted
+    results = rocchio_classifier.kneighbors(direction_vector, return_distance=False)
+
+    #we do not know where the shop is so we need to query 3 databases
+    #but all of them is product_id which is indexed
+
+    list_final_product = []
+
+    for result in results[0]:
+
+        map_result = map_product_id_label[result]
+
+        get_object = AmazonProducts.objects.filter(product_id=map_result)
+
+        if len(get_object) > 0:
+            list_final_product.append({"product": get_object[0], "shop": "amazon"})
+            continue
+
+        get_object = LazadaProducts.objects.filter(product_id=map_result)
+
+        if len(get_object) > 0:
+            list_final_product.append({"product": get_object[0], "shop": "lazada"})
+            continue
+
+        get_object = ShopeeProducts.objects.filter(product_id=map_result)
+
+        if len(get_object) > 0:
+            list_final_product.append({"product": get_object[0], "shop": "shopee"})
+            continue
+
+    list_json_response = []
+
+    for result in list_final_product:
+
+        product = result.get("product")
+        shop = result.get("shop")
+
+        list_json_response.append(
+            {
+                'product_name': product.product_name,
+                'product_id': product.product_id,
+                'product_link': product.product_link,
+                'product_description': product.product_description,
+                'original_price': product.original_price,
+                'current_price': product.current_price,
+                'image_link': product.image_link,
+                'shop': shop
+            }
+        )
+
+    return list_json_response
