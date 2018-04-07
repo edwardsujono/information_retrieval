@@ -202,3 +202,24 @@ def get_return_order_with_static_score(products):
 
     products = sorted(products.get('list_product'), key=itemgetter('score'), reverse=True)
     return products
+
+
+def get_items_semantic():
+
+    return {
+            'shopee': {
+                'positive': len(ShopeeComments.objects.filter(semantic_value=1)),
+                'negative': len(ShopeeComments.objects.filter(semantic_value=-1)),
+                'neutral': len(ShopeeComments.objects.filter(semantic_value=0))
+            },
+            'lazada': {
+                'positive': len(LazadaComments.objects.filter(semantic_value=1)),
+                'negative': len(LazadaComments.objects.filter(semantic_value=-1)),
+                'neutral': len(LazadaComments.objects.filter(semantic_value=0))
+            },
+            'amazon': {
+                'positive': len(AmazonComments.objects.filter(semantic_value=1)),
+                'negative': len(AmazonComments.objects.filter(semantic_value=-1)),
+                'neutral': len(AmazonComments.objects.filter(semantic_value=0))
+            }
+        }

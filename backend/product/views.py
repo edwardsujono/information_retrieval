@@ -98,5 +98,16 @@ def get_recommended_item(request):
         return append_header_with_cors(JsonResponse({"success": True}))
 
     return append_header_with_cors(
-        JsonResponse({"list_product": search_manager.get_recommended_items(request)})
+        JsonResponse(search_manager.get_recommended_items(request))
+    )
+
+
+@csrf_exempt
+def get_items_semantic(request):
+
+    if request.method == "OPTIONS":
+        return append_header_with_cors(JsonResponse({"success": True}))
+
+    return append_header_with_cors(
+        JsonResponse(search_manager.get_items_semantic())
     )
