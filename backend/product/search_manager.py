@@ -4,7 +4,9 @@ from haystack.query import SearchQuerySet
 import numpy as np
 from nltk.corpus import stopwords
 from django.conf import settings
-from product.models import AmazonProducts, LazadaProducts,ShopeeProducts
+from product.models import AmazonProducts, LazadaProducts,ShopeeProducts\
+    ,AmazonComments, LazadaComments, ShopeeComments
+from operator import itemgetter
 
 
 rocchio_classifier = settings.ROCCHIO_CLASSIFER
@@ -176,3 +178,27 @@ def get_recommended_items(request):
         )
 
     return list_json_response
+
+
+def get_return_order_with_static_score(products):
+
+    for product in products.get('list_product'):
+
+        if product.get('shop') == 'shopee':
+            comment = ShopeeComments.objects.filter(product_id=product.get('product_link'))
+            if len(comment) > 0:
+                comment = comment[0]
+                product['score'] += comment.semantic_value
+        elif product.get('shop') == 'amazon':
+            comment = AmazonComments.objects.filter(product_id=product.get('product_link'))
+            if len(comment) > 0:
+                comment = comment[0]
+                product['score'] += comment.semantic_value
+        else:
+            comment = LazadaComments.objects.filter(product_id=product.get('product_link'))
+            if len(comment) > 0:
+                comment = comment[0]
+                product['score'] += comment.semantic_value
+
+    products = sorted(products.get('list_product'), key=itemgetter('score'), reverse=True)
+    return products

@@ -33,9 +33,10 @@ class AmazonProducts(models.Model):
 
 
 class AmazonComments(models.Model):
-
+    id = models.AutoField(primary_key=True)
     product_id = models.CharField(max_length=1000)
     comment = models.CharField(max_length=1000)
+    semantic_value = models.IntegerField()
 
     class Meta:
         db_table = 'amazon_comments'
@@ -77,9 +78,11 @@ class ShopeeProducts(models.Model):
 
 
 class ShopeeComments(models.Model):
-
+    
+    id = models.AutoField(primary_key=True)
     product_id = models.CharField(max_length=1000)
     comment = models.CharField(max_length=1000)
+    semantic_value = models.IntegerField()
 
     class Meta:
         db_table = 'shopee_comments'
@@ -120,9 +123,11 @@ class LazadaProducts(models.Model):
 
 
 class LazadaComments(models.Model):
-
+    
+    id = models.AutoField(primary_key=True)
     product_id = models.CharField(max_length=1000)
     comment = models.CharField(max_length=1000)
+    semantic_value = models.IntegerField()
 
     class Meta:
         db_table = 'lazada_comments'

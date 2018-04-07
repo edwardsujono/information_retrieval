@@ -79,14 +79,16 @@ def get_list_item(request):
                     'original_price': result.original_price,
                     'current_price': result.current_price,
                     'image_link': result.image_link,
-                    'shop': verbose_shop
+                    'shop': verbose_shop,
+                    'score': result.score
                 }
             )
 
         cnt += 1
 
     return append_header_with_cors(
-        JsonResponse({"list_product": list_json_return, "total": len(results)}))
+        JsonResponse({"list_product": search_manager.get_return_order_with_static_score(
+                list_json_return), "total": len(results)}))
 
 
 @csrf_exempt
