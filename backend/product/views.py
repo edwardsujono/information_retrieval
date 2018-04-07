@@ -98,7 +98,7 @@ def get_recommended_item(request):
         return append_header_with_cors(JsonResponse({"success": True}))
 
     return append_header_with_cors(
-        JsonResponse(search_manager.get_recommended_items(request))
+        JsonResponse({"list_product": search_manager.get_recommended_items(request)})
     )
 
 
