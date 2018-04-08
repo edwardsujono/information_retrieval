@@ -23,6 +23,7 @@ class AmazonProducts(models.Model):
     product_link = models.CharField(max_length=1000)
     rating = models.CharField(max_length=10)
     image_link = models.CharField(max_length=1000)
+    semantic_value = models.IntegerField()
 
     class Meta:
         db_table = 'amazon_products'
@@ -68,6 +69,7 @@ class ShopeeProducts(models.Model):
     product_link = models.CharField(max_length=1000)
     rating = models.CharField(max_length=10)
     image_link = models.CharField(max_length=1000)
+    semantic_value = models.IntegerField()
 
     class Meta:
         db_table = 'shopee_products'
@@ -114,6 +116,7 @@ class LazadaProducts(models.Model):
     product_link = models.CharField(max_length=1000)
     rating = models.CharField(max_length=10)
     image_link = models.CharField(max_length=1000)
+    semantic_value = models.IntegerField()
 
     class Meta:
         db_table = 'lazada_products'

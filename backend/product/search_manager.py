@@ -188,17 +188,20 @@ def get_return_order_with_static_score(products):
             comment = ShopeeComments.objects.filter(product_id=product.get('product_link'))
             if len(comment) > 0:
                 comment = comment[0]
-                product['score'] += comment.semantic_value
+                if comment.semantic_value:
+                    product['score'] += comment.semantic_value
         elif product.get('shop') == 'amazon':
             comment = AmazonComments.objects.filter(product_id=product.get('product_link'))
             if len(comment) > 0:
                 comment = comment[0]
-                product['score'] += comment.semantic_value
+                if comment.semantic_value:
+                    product['score'] += comment.semantic_value
         else:
             comment = LazadaComments.objects.filter(product_id=product.get('product_link'))
             if len(comment) > 0:
                 comment = comment[0]
-                product['score'] += comment.semantic_value
+                if comment.semantic_value:
+                    product['score'] += comment.semantic_value
 
     products = sorted(products.get('list_product'), key=itemgetter('score'), reverse=True)
     return products
@@ -207,22 +210,58 @@ def get_return_order_with_static_score(products):
 def get_items_semantic():
 
     return {
-            'shopee': {
-                'positive': len(ShopeeComments.objects.filter(semantic_value=1)),
-                'negative': len(ShopeeComments.objects.filter(semantic_value=-1)),
-                'neutral': len(ShopeeComments.objects.filter(semantic_value=0)),
-                'rating': RatingShop.objects.get(shop='shopee').rating
-            },
-            'lazada': {
-                'positive': len(LazadaComments.objects.filter(semantic_value=1)),
-                'negative': len(LazadaComments.objects.filter(semantic_value=-1)),
-                'neutral': len(LazadaComments.objects.filter(semantic_value=0)),
-                'rating': RatingShop.objects.get(shop='lazada').rating
-            },
-            'amazon': {
-                'positive': len(AmazonComments.objects.filter(semantic_value=1)),
-                'negative': len(AmazonComments.objects.filter(semantic_value=-1)),
-                'neutral': len(AmazonComments.objects.filter(semantic_value=0)),
-                'racing': RatingShop.objects.get(shop='amazon').rating
-            }
+            'shopee': get_shop_all_semantic(ShopeeProducts),
+            'lazada': get_shop_all_semantic(LazadaProducts),
+            'amazon': get_shop_all_semantic(AmazonProducts)
         }
+
+
+def get_shop_all_semantic(shop):
+
+    all_object_comment = shop.objects.all()
+    negative_comment = 0
+    total_negative_comment = 0
+
+    positive_comment = 0
+    total_positive_comment = 0
+
+    neutral_comment = 0
+    total_neutral_comment = 0
+
+    for comment in all_object_comment:
+        if comment.semantic_value == -1:
+            negative_comment += float(comment.rating)
+            total_negative_comment += 1
+        elif comment.semantic_value == 1:
+            positive_comment += float(comment.rating)
+            total_positive_comment += 1
+        else:
+            neutral_comment += float(comment.rating)
+            total_neutral_comment += 1
+
+    negative_comment = negative_comment / (total_negative_comment + 1)
+    positive_comment = positive_comment / (total_positive_comment + 1)
+    neutral_comment = neutral_comment / (total_neutral_comment + 1)
+
+    total_comment = (total_neutral_comment + total_positive_comment + total_negative_comment)
+
+    positive_radius = total_positive_comment * 1.0 / total_comment
+
+    negative_radius = total_negative_comment * 1.0 / total_comment
+
+    neutral_radius = total_neutral_comment * 1.0 / total_comment
+
+    return {
+        'positive': {
+            'value': positive_comment,
+            'total': positive_radius * 5
+        },
+        'negative': {
+            'value': negative_comment,
+            'total': negative_radius * 5
+        },
+        'neutral': {
+            'value': neutral_comment,
+            'total': neutral_radius * 5
+        }
+    }
