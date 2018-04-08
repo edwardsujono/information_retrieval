@@ -5,7 +5,7 @@ import numpy as np
 from nltk.corpus import stopwords
 from django.conf import settings
 from product.models import AmazonProducts, LazadaProducts,ShopeeProducts\
-    ,AmazonComments, LazadaComments, ShopeeComments
+    ,AmazonComments, LazadaComments, ShopeeComments, RatingShop
 from operator import itemgetter
 
 
@@ -210,16 +210,19 @@ def get_items_semantic():
             'shopee': {
                 'positive': len(ShopeeComments.objects.filter(semantic_value=1)),
                 'negative': len(ShopeeComments.objects.filter(semantic_value=-1)),
-                'neutral': len(ShopeeComments.objects.filter(semantic_value=0))
+                'neutral': len(ShopeeComments.objects.filter(semantic_value=0)),
+                'rating': RatingShop.objects.get(shop='shopee').rating
             },
             'lazada': {
                 'positive': len(LazadaComments.objects.filter(semantic_value=1)),
                 'negative': len(LazadaComments.objects.filter(semantic_value=-1)),
-                'neutral': len(LazadaComments.objects.filter(semantic_value=0))
+                'neutral': len(LazadaComments.objects.filter(semantic_value=0)),
+                'rating': RatingShop.objects.get(shop='lazada').rating
             },
             'amazon': {
                 'positive': len(AmazonComments.objects.filter(semantic_value=1)),
                 'negative': len(AmazonComments.objects.filter(semantic_value=-1)),
-                'neutral': len(AmazonComments.objects.filter(semantic_value=0))
+                'neutral': len(AmazonComments.objects.filter(semantic_value=0)),
+                'racing': RatingShop.objects.get(shop='amazon').rating
             }
         }

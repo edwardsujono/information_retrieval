@@ -4,6 +4,15 @@ from haystack import indexes
 # Create your models here.
 
 
+class RatingShop(models.Model):
+
+    shop = models.CharField(max_length=1000)
+    rating = models.FloatField()
+
+    class Meta:
+        db_table = 'rating_shop'
+
+
 class AmazonProducts(models.Model):
 
     product_id = models.IntegerField(primary_key=True)
