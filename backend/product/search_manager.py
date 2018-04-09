@@ -185,23 +185,23 @@ def get_return_order_with_static_score(products):
     for product in products.get('list_product'):
 
         if product.get('shop') == 'shopee':
-            comment = ShopeeComments.objects.filter(product_id=product.get('product_link'))
+            comment = ShopeeProducts.objects.filter(product_id=product.get('product_id'))
             if len(comment) > 0:
                 comment = comment[0]
-                if comment.semantic_value:
-                    product['score'] += comment.semantic_value
+                product['score'] += comment.semantic_value
+                product['semantic_value'] = comment.semantic_value
         elif product.get('shop') == 'amazon':
-            comment = AmazonComments.objects.filter(product_id=product.get('product_link'))
+            comment = AmazonProducts.objects.filter(product_id=product.get('product_id'))
             if len(comment) > 0:
                 comment = comment[0]
-                if comment.semantic_value:
-                    product['score'] += comment.semantic_value
+                product['score'] += comment.semantic_value
+                product['semantic_value'] = comment.semantic_value
         else:
-            comment = LazadaComments.objects.filter(product_id=product.get('product_link'))
+            comment = LazadaProducts.objects.filter(product_id=product.get('product_id'))
             if len(comment) > 0:
                 comment = comment[0]
-                if comment.semantic_value:
-                    product['score'] += comment.semantic_value
+                product['score'] += comment.semantic_value
+                product['semantic_value'] = comment.semantic_value
 
     products = sorted(products.get('list_product'), key=itemgetter('score'), reverse=True)
     return products
