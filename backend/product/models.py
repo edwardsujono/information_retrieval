@@ -38,7 +38,8 @@ class AmazonProducts(models.Model):
             "product_description": self.product_description,
             "product_link": self.product_link,
             "rating": self.rating,
-            "image_link": self.image_link
+            "image_link": self.image_link,
+            "semantic_value": self.semantic_value
         }
 
 
@@ -84,7 +85,8 @@ class ShopeeProducts(models.Model):
             "product_description": self.product_description,
             "product_link": self.product_link,
             "rating": self.rating,
-            "image_link": self.image_link
+            "image_link": self.image_link,
+            "semantic_value": self.semantic_value
         }
 
 
@@ -130,7 +132,8 @@ class LazadaProducts(models.Model):
             "product_description": self.product_description,
             "product_link": self.product_link,
             "rating": self.rating,
-            "image_link": self.image_link
+            "image_link": self.image_link,
+            "semantic_value": self.semantic_value
         }
 
 
