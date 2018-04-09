@@ -8,7 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # this will build the indexer for the auto complete
-        # self.normalize_products(ShopeeProducts)
+        self.normalize_products(ShopeeProducts)
         self.normalize_products(AmazonProducts)
         self.normalize_products(LazadaProducts)
 
