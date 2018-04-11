@@ -1,6 +1,6 @@
 # E-Commerce Crawler
 
-For shopee and lazada, you need to run Splash. See splash documentation: (here)[splash.readthedocs.io]
+For shopee and lazada, you need to run Splash. See splash documentation: [here](https://splash.readthedocs.io)
 
 ## Shopee
 Go to the shopee_scrapy directory and run the following command
