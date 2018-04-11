@@ -17,7 +17,7 @@ class AmazonScrapy(scrapy.Spider):
         print("loading...")
         list_link = []
         
-        data = json.load(open('D:/Academic/Sem 8/information_retrieval/collect_data_service/amazon_scrapy/output.json',mode='r',encoding='UTF-8'))
+        data = json.load(open('../../amazon_products.json',mode='r',encoding='UTF-8'))
         for i in range(0,len(data)):
             list_link.append(re.sub(r'\/ref=.*','',data[i]["product_link"],flags=re.DOTALL))
         print("load data done..")
